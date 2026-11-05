@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#1a0d12">
+<meta name="robots" content="noindex, nofollow">
+<title>متحف حبّنا</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<canvas id="scene"></canvas>
+<div id="fader"></div>
+
+<!-- ========== شاشة العنوان ========== -->
+<div id="title-screen" class="screen">
+  <div class="title-wrap">
+    <p class="eyebrow">مجموعة دائمة</p>
+    <h1 id="title">متحف حبّنا</h1>
+    <p class="fromto">من <b id="t-from"></b><span class="sep">·</span>إلى <b id="t-to"></b></p>
+    <p id="t-since" class="since hidden"></p>
+    <button id="btn-start" class="btn-light" disabled>ادخل</button>
+    <button id="btn-fs" class="link-btn">⤢ افتح بملء الشاشة</button>
+    <div id="loading" class="loading"><div class="bar"><i></i></div><span>عم نعلّق اللوحات…</span></div>
+  </div>
+</div>
+
+<!-- ========== تخصيص الشكل ========== -->
+<div id="custom-screen" class="hidden">
+  <div class="panel">
+    <p class="eyebrow">قبل ما نفوت</p>
+    <h2>شكلكن</h2>
+    <div class="row-label">مين إنت؟</div>
+    <div class="seg" id="who-seg">
+      <button data-kind="boy" id="who-boy">أنا</button>
+      <button data-kind="girl" id="who-girl">أنا</button>
+    </div>
+    <div class="tabs" id="tabs">
+      <button data-tab="me" class="on">شكلي</button>
+      <button data-tab="partner" id="tab-partner">شكلو</button>
+    </div>
+    <div id="opts"></div>
+    <div class="row-label">ستايل المتحف</div>
+    <div class="seg" id="theme-seg">
+      <button data-theme="modern">عصري ◻︎</button>
+      <button data-theme="classic">كلاسيكي ♛</button>
+    </div>
+    <button id="btn-go" class="btn-primary">يلا نفوت ❤</button>
+    <p class="hint">اسحب على المشهد لتلفّ الشخصيات</p>
+  </div>
+</div>
+
+<!-- ========== الواجهة أثناء اللعب ========== -->
+<div id="hud" class="hidden">
+  <div class="hud-top">
+    <div class="pill" id="room-name">المدخل</div>
+    <div class="pill"><span>💖</span> <b id="found-count">0</b>/<span id="found-total">0</span></div>
+    <div class="pill" id="puzzle-pill"><span>🧩</span> <b id="puzzle-count">0</b>/<span id="puzzle-total">0</span></div>
+  </div>
+  <div class="hud-buttons">
+    <button id="btn-help" class="round" title="مساعدة">؟</button>
+    <button id="btn-music" class="round" title="موسيقى">♫</button>
+    <button id="btn-dance" class="round" title="رقصة">💃</button>
+    <button id="btn-fs2" class="round" title="ملء الشاشة">⤢</button>
+  </div>
+  <div id="prompt" class="prompt hidden"></div>
+  <div id="state-btn" class="state-btn hidden"><button id="state-action"></button></div>
+  <div id="toast" class="toast"></div>
+</div>
+
+<!-- فقاعة الكلام واسم الشريك -->
+<div id="tag" class="name-tag hidden"><span id="tag-name"></span></div>
+<div id="bubble" class="bubble hidden"></div>
+
+<!-- وضع التأمل -->
+<div id="view-ui" class="hidden">
+  <div class="view-tag">تتأمّل</div>
+  <div class="view-card">
+    <div class="view-eyebrow" id="vu-num"></div>
+    <h3 id="vu-title"></h3>
+    <div id="vu-date" class="vu-date"></div>
+    <p id="vu-cap"></p>
+    <div class="view-nav">
+      <button id="vu-prev" title="السابق">→</button>
+      <button id="vu-full" title="كبّر">⤢</button>
+      <button id="vu-exit" title="رجوع">✕</button>
+      <button id="vu-next" title="التالي">←</button>
+    </div>
+  </div>
+</div>
+
+<!-- تحكم اللمس -->
+<div id="joystick" class="hidden"><div id="stick"></div></div>
+<button id="action-btn" class="hidden">❤</button>
+
+<!-- ========== عرض الصورة كاملة ========== -->
+<div id="viewer" class="modal hidden">
+  <div class="viewer-box">
+    <button class="close">✕</button>
+    <div class="viewer-frame"><img id="viewer-img" alt=""></div>
+  </div>
+</div>
+
+<!-- ========== الإهداء ========== -->
+<div id="dedication" class="modal hidden">
+  <div class="ded-box">
+    <button class="close">✕</button>
+    <p class="eyebrow">مجموعة دائمة</p>
+    <h2 id="ded-title"></h2>
+    <p id="ded-msg"></p>
+    <p id="ded-sign" class="sign"></p>
+    <p id="ded-since" class="ded-since hidden"></p>
+  </div>
+</div>
+
+<!-- ========== الأحجية ========== -->
+<div id="puzzle" class="modal hidden">
+  <div class="puzzle-box">
+    <button class="close">✕</button>
+    <h2 id="puzzle-title">أحجية</h2>
+    <p id="puzzle-desc" class="puzzle-desc"></p>
+    <div id="puzzle-area"></div>
+    <div class="puzzle-actions">
+      <span id="puzzle-moves"></span>
+      <button id="puzzle-reset" class="btn-ghost">خربطها من جديد</button>
+    </div>
+  </div>
+</div>
+
+<!-- ========== النهاية ========== -->
+<div id="ending" class="modal soft hidden">
+  <div class="ending-box">
+    <div class="big-heart">❤</div>
+    <h2 id="ending-title"></h2>
+    <p id="ending-msg"></p>
+    <p id="ending-stats" class="stats"></p>
+    <button class="btn-primary close-ending">كمّلوا رقص 💃</button>
+  </div>
+</div>
+
+<!-- ========== المساعدة ========== -->
+<div id="help" class="modal hidden">
+  <div class="help-box">
+    <button class="close">✕</button>
+    <h2>كيف تلعب</h2>
+    <ul>
+      <li>امشِ بين القاعات، اللوحات مغطاية بستارة، قرّب منها لتنكشف 💖</li>
+      <li><b>E</b> أو زر ❤ (أو كبسة عاللوحة) لتتأمّل الصورة، وبالأسهم بتتنقّل بين الصور.</li>
+      <li>اللوحات المقفولة 🔒 بدها أحجية، حلّها لتطلعلك الصورة.</li>
+      <li>المقاعد 🪑: اقعدوا سوا. وزر 💃 لترقصوا بأي مكان.</li>
+      <li>بآخر قاعة في قلب عالأرض… وقفوا عليه ❤</li>
+    </ul>
+    <div class="help-row">
+      <button id="btn-relook" class="btn-ghost">غيّر الشكل</button>
+      <button id="reset-progress" class="btn-ghost">ابدأ من الأول</button>
+    </div>
+  </div>
+</div>
+
+<div id="hearts-layer"></div>
+
+<script src="config.js"></script>
+<script type="module" src="js/main.js"></script>
+</body>
+</html>
